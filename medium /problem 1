@@ -1,0 +1,58 @@
+/*
+ * Problem: 15. 3Sum
+ * Link: https://leetcode.com/problems/3sum/
+ * Difficulty: Medium
+ * 
+ * Approach
+ * - Sort the array to handle duplicates easily and use two-pointer technique
+ * - Fix the first element (i), then use left (i+1) and right (n-1) pointers
+ * - Skip duplicates for i, left, and right to avoid duplicate triplets
+ * - If sum == 0: add triplet, move left++ and right-- while skipping duplicates
+ * - If sum < 0: left++
+ * - If sum > 0: right--
+ * 
+ * Time Complexity: O(n²)  [O(n log n) for sort + O(n²) for two pointers]
+ * Space Complexity: O(1)  [excluding output list]
+ */
+
+import java.util.*;
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        int n = nums.length;
+        
+        for (int i = 0; i < n - 2; i++) {
+            // Skip duplicate for first element
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            
+            // If current is positive, no need to continue (sum can't be 0)
+            if (nums[i] > 0) break;
+            
+            int left = i + 1;
+            int right = n - 1;
+            
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                
+                if (sum == 0) {
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    
+                    // Skip duplicates for left and right
+                    while (left < right && nums[left] == nums[left + 1]) left++;
+                    while (left < right && nums[right] == nums[right - 1]) right--;
+                    
+                    left++;
+                    right--;
+                } else if (sum < 0) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return result;
+    }
+}
