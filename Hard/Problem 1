@@ -1,0 +1,46 @@
+//*Sudoku Solver
+*//
+class Solution {
+    public void solveSudoku(char[][] board) {
+        solve(board, 0, 0);
+    }
+    
+    private boolean solve(char[][] board, int row, int col) {
+        //Next row
+        if (col == 9) return solve(board, row + 1, 0);
+        //All rows done - solved!
+        if (row == 9) return true;
+        
+        //Skip filled cells
+        if (board[row][col] != '.') return solve(board, row, col + 1);
+        
+        // Try 1-9
+        for (char num = '1'; num <= '9'; num++) {
+            if (isValid(board, row, col, num)) {
+                board[row][col] = num;
+                if (solve(board, row, col + 1)) return true;
+                board[row][col] = '.';  // Backtrack
+            }
+        }
+        return false;
+    }
+    
+    private boolean isValid(char[][] board, int row, int col, char num) {
+        
+//Check row
+        for (int j = 0; j < 9; j++)
+            if (board[row][j] == num) return false;
+        
+//Check column
+        for (int i = 0; i < 9; i++)
+            if (board[i][col] == num) return false;
+        
+//Check  3x3box
+        int startRow = (row / 3) * 3, startCol = (col / 3) * 3;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (board[startRow + i][startCol + j] == num) return false;
+        
+        return true;
+    }
+}
